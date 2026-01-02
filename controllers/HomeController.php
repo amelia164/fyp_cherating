@@ -8,7 +8,7 @@ use Dompdf\Options;
 class HomeController extends Controller
 {
     // Declare the model property
-    private $bookingModel, $contactModel, $roomModel, $customerModel;
+    private $bookingModel, $contactModel, $roomModel, $customerModel, $db;
 
     // Constructor to initialize the model
     public function __construct()
@@ -18,6 +18,9 @@ class HomeController extends Controller
         $this->roomModel = $this->model('RoomModel');
         $this->contactModel = $this->model('ContactModel');
         $this->customerModel = $this->model('CustomerModel');
+
+        //Initialized the DB property
+        $this->db = Database::getInstance();
     }
 
     // Home Page
@@ -470,8 +473,8 @@ class HomeController extends Controller
 
         // 3. Save Booking Record
         $booking_id = $this->bookingModel->createBooking(
-            $customerId, $check_in, $check_out, $rooms, 
-            $payment_method, $payment_details, $totalAmount, $totalNights
+            $customerId, $check_in, $check_out, $rooms, $payment_method,
+            $payment_details, $totalAmount, $totalNights, $targetPath
         );
 
         if (!$booking_id) {
@@ -493,26 +496,10 @@ class HomeController extends Controller
             }
 
             // Create the Billplz Bill
-            $bill = $this->createBillplzBill(
-                $cust_name,
-                $cust_email, 
-                $cust_phone, 
-                $depositAmount, 
-                $booking_id
-            );
+            $bill = $this->createBillplzBill($cust_name, $cust_email, $cust_phone, $depositAmount, $booking_id);
             
             if (isset($bill['id']) && isset($bill['url'])) {
-                $this->bookingModel->addPayment([
-                    'booking_id'      => $booking_id,
-                    'billplz_id'      => $bill['id'],
-                    'payment_ref_no'  => $bill['id'],
-                    'payment_method'  => 'fpx',
-                    'amount'          => $depositAmount,
-                    'balance_after'   => $balanceRemaining,
-                    'payment_type'    => 'deposit',
-                    'receipt_image'   => null,
-                    'verified'        => 'pending'
-                ]);
+                $this->bookingModel->updatePaymentWithBillplz($booking_id, $bill['id']);
                 
                 $this->bookingModel->releaseLocks(session_id());
                 $this->clearBookingSession();
@@ -529,18 +516,6 @@ class HomeController extends Controller
                 exit;
             }
         } else {
-            // Handle QR/Manual Payment record
-            $this->bookingModel->addPayment([
-                'booking_id'      => $booking_id,
-                'payment_ref_no'  => 'PAY-' . strtoupper(uniqid()),
-                'payment_method'  => $payment_method,
-                'amount'          => $depositAmount,
-                'balance_after'   => $balanceRemaining,
-                'payment_type'    => 'deposit',
-                'receipt_image'   => $targetPath,
-                'verified'        => 'pending'
-            ]);
-
             $this->bookingModel->releaseLocks(session_id());
             $this->clearBookingSession();
             header('Location: ' . APP_URL . '/confirmation-done/' . $booking_id);

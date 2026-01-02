@@ -84,9 +84,9 @@
                                                 <a href="<?= APP_URL . '/admin/payments/verify/' . $payment['id'] ?>" class="btn btn-info btn-sm">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="<?= APP_URL . '/admin/payments/delete/' . $payment['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                                                <!-- <a href="<?= APP_URL . '/admin/payments/delete/' . $payment['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
                                                     <i class="fas fa-trash"></i>
-                                                </a>
+                                                </a> -->
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

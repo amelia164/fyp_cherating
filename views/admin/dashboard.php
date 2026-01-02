@@ -182,7 +182,7 @@
                             <tbody id="unpaid-booking-list">
                                 <?php foreach($unpaidBookings as $booking): ?>
                                     <?php
-                                        $isWaitingQR = ($booking['payment_method'] === 'qr' && $booking['payment_verify_status'] === 'pending');
+                                        $isWaitingQR = ($booking['payment_method'] === 'qr' && $booking['verified'] === 'pending');
                                     ?>
                                 <tr>
                                     <td><?= $booking['booking_ref_no'] ?></td>
@@ -191,9 +191,7 @@
                                     <td>RM <?= number_format($booking['total_amount'], 2) ?></td>
                                     <td>
                                         <?php if ($isWaitingQR): ?>
-                                            <span class="badge badge-info animate-pulse">
-                                                <i class="fas fa-clock"></i> Waiting Verification
-                                            </span>
+                                            <span class="badge badge-info animate-pulse"><i class="fas fa-clock"></i> Waiting Verification</span>
                                         <?php else: ?>
                                             <span class="badge badge-danger"><?= strtoupper($booking['payment_status']) ?></span>
                                         <?php endif; ?>
@@ -203,9 +201,7 @@
                                             <i class="fas fa-eye"></i> View Details
                                         </a>
                                         <?php if ($isWaitingQR): ?>
-                                            <a href="<?= APP_URL ?>/admin/payments/verify/<?= $booking['id'] ?>" class="btn btn-sm btn-success">
-                                                <i class="fas fa-check"></i> Verify QR
-                                            </a>
+                                            <a href="<?= APP_URL ?>/admin/payments/verify/<?= $booking['payment_id'] ?>" class="btn btn-sm btn-success">Verify QR</a>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
@@ -255,7 +251,7 @@
                         statusHtml = `<span class="badge badge-info animate-pulse"><i class="fas fa-clock"></i> Waiting Verification</span>`;
                         actionButtons = `
                             <a href="<?= APP_URL ?>/admin/bookings/view/${booking.id}" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i> View</a>
-                            <a href="<?= APP_URL ?>/admin/payments/verify/${booking.id}" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Verify QR</a>
+                            <a href="<?= APP_URL ?>/admin/payments/verify/${booking.payment_id}" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Verify QR</a>
                         `;
                     } 
                     // 2. Logic for General Unpaid (Cash or QR not yet uploaded)

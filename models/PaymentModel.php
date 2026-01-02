@@ -78,6 +78,9 @@ class PaymentModel extends Model
 
     public function addPaymentReceipt($bookingId, $imagePath, $amount)
     {
+        $relativeImagePath = str_replace('public/', '', $imagePath);
+        $relativeImagePath = ltrim($relativeImagePath, '/');
+
         $sql = "INSERT INTO payments (booking_id, payment_ref_no, amount, receipt_image, payment_type, verified) 
                 VALUES (?, ?, ?, ?, 'full', 'pending')";
         
@@ -96,7 +99,21 @@ class PaymentModel extends Model
 
     public function getPaymentById($id)
     {
-        $sql = "SELECT * FROM payments WHERE id = ?";
+        $sql = "SELECT 
+                    p.*, 
+                    b.booking_ref_no, 
+                    b.total_amount, 
+                    b.check_in, 
+                    b.check_out, 
+                    b.created_at AS booking_created_at, 
+                    c.full_name, 
+                    c.email,
+                    (SELECT SUM(amount) FROM payments WHERE booking_id = b.id AND verified = 'approved') as total_paid_to_date
+                FROM payments p
+                JOIN bookings b ON p.booking_id = b.id
+                JOIN customers c ON b.customer_id = c.id
+                WHERE p.id = ?";
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$id]);
 

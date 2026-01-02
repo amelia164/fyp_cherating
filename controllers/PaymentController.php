@@ -52,7 +52,7 @@ class PaymentController extends Controller
                 $booking_id = $payment['booking_id'];
                 
                 if ($status === 'approved') {
-                    $this->bookingModel->updateBookingStatus($booking_id, 'paid', 'confirmed');
+                    $this->bookingModel->updateBookingStatus($booking_id, 'partial', 'confirmed');
                     $_SESSION['success'] = "Payment approved and booking confirmed!";
                 } else {
                     $this->bookingModel->updateBookingStatus($booking_id, 'unpaid', 'pending');
@@ -70,24 +70,34 @@ class PaymentController extends Controller
     public function verifyPayment($id)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $status = $_POST['status']; // 'verified' or 'rejected'
+            $formStatus = $_POST['status']; 
             $reason = $_POST['rejection_reason'] ?? '';
 
-            $success = $this->paymentModel->updateVerificationStatus($id, $status, $reason);
+            $dbStatus = ($formStatus === 'verified') ? 'approved' : 'rejected';
+
+            $success = $this->paymentModel->updateVerificationStatus($id, $dbStatus, $reason);
 
             if ($success) {
-                if ($status === 'verified') {
-                    $payment = $this->paymentModel->getPaymentById($id);
-                    
+                $payment = $this->paymentModel->getPaymentById($id);
+                
+                if ($dbStatus === 'approved') {
+                    $totalPaid = (float)($payment['total_paid_to_date'] ?? 0);
+                    $bookingTotal = (float)$payment['total_amount'];
+
+                    $newPaymentStatus = ($totalPaid >= $bookingTotal) ? 'paid' : 'partial';
+
                     $this->bookingModel->updateBookingStatus(
                         $payment['booking_id'], 
-                        'paid',      // payment_status
-                        'confirmed'  // booking_status
+                        $newPaymentStatus,      
+                        'confirmed'  
                     );
+                    
+                    Flash::set('success', 'Payment approved. Booking status updated to ' . strtoupper($newPaymentStatus));
+                } else {
+                    Flash::set('warning', 'Payment has been rejected.');
                 }
-                Flash::set('success', 'Payment status updated to ' . strtoupper($status));
             } else {
-                Flash::set('error', 'Failed to update status.');
+                Flash::set('error', 'Failed to update database.');
             }
             
             header('Location: ' . APP_URL . '/admin/payments/verify/' . $id);

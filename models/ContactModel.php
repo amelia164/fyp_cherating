@@ -51,4 +51,10 @@ class ContactModel extends Model
         $stmt->execute();
         return $stmt->fetchColumn();
     }
+
+    public function deleteMessage($id)
+    {
+        $stmt = $this->db->prepare("DELETE FROM contacts WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
 }

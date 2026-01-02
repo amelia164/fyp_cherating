@@ -2,7 +2,7 @@
 
 class BookingModel extends Model
 {
-    public function createBooking($customerId, $check_in, $check_out, $rooms, $payment_method, $payment_details, $total_amount, $totalNights)
+    public function createBooking($customerId, $check_in, $check_out, $rooms, $payment_method, $payment_details, $total_amount, $totalNights, $receipt_image = null)
     {
         try {
             // Begin transaction
@@ -42,8 +42,8 @@ class BookingModel extends Model
 
             $stmtPayment = $this->db->prepare("
                 INSERT INTO payments 
-                (booking_id, payment_ref_no, payment_method, amount, balance_after, payment_type, remarks, verified)
-                VALUES (?, ?, ?, ?, ?, 'deposit', ?, 'pending')
+                (booking_id, payment_ref_no, payment_method, amount, balance_after, payment_type, remarks, verified, receipt_image)
+                VALUES (?, ?, ?, ?, ?, 'deposit', ?, 'pending', ?)
             ");
 
             // Assuming $payment_details from the controller is used as a 'remarks' field for now
@@ -53,7 +53,8 @@ class BookingModel extends Model
                 $payment_method,
                 $depositAmount,
                 $balanceRemaining,
-                $payment_details
+                $payment_details,
+                $receipt_image
             ]);
 
             // OPTIONAL: Update booking payment status after successful payment record creation
@@ -97,6 +98,14 @@ class BookingModel extends Model
             file_put_contents('debug.txt', "BookingModel error: " . $e->getMessage() . "\n", FILE_APPEND);
             return false;
         }
+    }
+
+    public function updatePaymentWithBillplz($booking_id, $bill_id)
+    {
+        $sql = "UPDATE payments SET billplz_id = ?, payment_ref_no = ? WHERE booking_id = ?";
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([$bill_id, $bill_id, $booking_id]);
     }
 
     public function getBookingById($booking_id)
@@ -569,17 +578,16 @@ class BookingModel extends Model
                     b.check_in, 
                     b.total_amount, 
                     b.payment_status,
-                    c.full_name, 
-                    -- We use MAX or a specific pick to avoid duplicates
-                    MAX(p.verified) as payment_verify_status, 
-                    MAX(p.payment_method) as payment_method 
+                    c.full_name,
+                    MAX(p.id) as payment_id,
+                    MAX(p.verified) as verified,
+                    MAX(p.payment_method) as payment_method
                 FROM bookings b
                 LEFT JOIN customers c ON b.customer_id = c.id 
                 LEFT JOIN payments p ON b.id = p.booking_id 
                 WHERE b.payment_status != 'paid' 
                 AND b.status != 'cancelled'
-                AND (p.verified IS NULL OR p.verified = 'pending')
-                GROUP BY b.id -- This prevents the duplicates
+                GROUP BY b.id 
                 ORDER BY b.created_at DESC 
                 LIMIT :limit";
                 

@@ -63,13 +63,14 @@ Route::group('/admin', function () {
     Route::match(['GET', 'POST'], '/rooms/create', 'Room@createOrUpdate');
     Route::match(['GET', 'POST'], '/rooms/edit/{id}', 'Room@createOrUpdate');
     Route::get('/room/view/{id}', 'Room@view');
+    Route::get('/rooms/delete/{id}', 'Room@delete');
 
     // Bookings
     Route::get('/bookings', 'Booking@index');
     Route::match(['GET', 'POST'], '/bookings/create', 'Booking@createOrUpdate');
     Route::match(['GET', 'POST'], '/bookings/edit/{id}', 'Booking@createOrUpdate');
     Route::get('/bookings/view/{id}', 'Booking@viewBooking');
-    Route::get('/bookings/{id}/delete', 'Booking@delete');
+    Route::get('/bookings/delete/{id}', 'Booking@delete');
 
     // Payments
     Route::get('/payments', 'Payment@index');
@@ -86,6 +87,7 @@ Route::group('/admin', function () {
     // Messages
     Route::get('/messages', 'Message@index');
     Route::get('/messages/view/{id}', 'Message@viewMessage');
+    Route::get('/messages/delete/{id}', 'Message@delete');
 
     // Dashboard Analytics
     Route::match(['GET', 'POST'], '/getUnpaidBookingsJson', 'Admin@getUnpaidBookingsJson');

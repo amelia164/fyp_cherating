@@ -7,7 +7,7 @@ class WhatsappHelper
     */
     public static function sendOTP($phone, $message)
     {
-        $apiKey = "VhReu5S2FqaR"; // Your actual key
+        $apiKey = "FzhUF92sDGAv"; // Your actual key
         
         // 1. Clean the phone number (remove +, spaces, dashes)
         $cleanPhone = preg_replace('/[^0-9]/', '', $phone);

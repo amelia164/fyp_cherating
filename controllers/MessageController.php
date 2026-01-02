@@ -64,4 +64,22 @@ class MessageController extends Controller
             'whatsappLink' => $whatsappLink
         ]);
     }
+
+    // Delete messages
+    public function delete($id)
+    {
+        $contact = $this->contactModel->getMessageById($id);
+
+        if (!$contact) {
+            Flash::set('error', 'Messages not found');
+            header('Location: ' . APP_URL . '/admin/messages');
+            exit;
+        }
+
+        $this->contactModel->deleteMessage($id);
+
+        Flash::set('success', 'Messages deleted successfully');
+        header('Location: ' . APP_URL . '/admin/messages');
+        exit;
+    }
 }
