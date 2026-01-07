@@ -357,25 +357,37 @@ class BookingModel extends Model
 
     public function getTotalRevenue()
     {
-        // Sum of total_amount from all bookings
-        $stmt = $this->db->prepare("SELECT SUM(total_amount) FROM bookings");
+        $sql = "SELECT SUM(amount) as total FROM payments WHERE verified = 'approved'";
+        $stmt = $this->db->prepare($sql);
         $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        return $stmt->fetchColumn() ?: 0;
+        return $row['total'] ?: 0;
     }
 
     public function getMonthlyRevenue($year = null)
     {
         $year = $year ?: date('Y');
         // Using payment_status = 'paid' ensures we only chart actual income
-        $sql = "SELECT MONTH(created_at) as month, SUM(total_amount) as total 
-                FROM bookings 
-                WHERE YEAR(created_at) = :year AND payment_status = 'paid'
+        $sql = "SELECT MONTH(created_at) as month, SUM(amount) as total 
+                FROM payments 
+                WHERE YEAR(created_at) = :year AND verified = 'approved'
                 GROUP BY MONTH(created_at)";
         
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':year' => $year]);
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getPendingRevenue()
+    {
+        $sql = "SELECT SUM(amount) as total FROM payments WHERE verified = 'pending'";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row['total'] ?: 0;
     }
 
     public function getUnpaidBookings($limit = 5)
@@ -578,16 +590,24 @@ class BookingModel extends Model
                     b.check_in, 
                     b.total_amount, 
                     b.payment_status,
+                    b.created_at AS booking_date,
                     c.full_name,
-                    MAX(p.id) as payment_id,
-                    MAX(p.verified) as verified,
-                    MAX(p.payment_method) as payment_method
+                    p_agg.payment_id,
+                    p_agg.verified,
+                    p_agg.payment_method
                 FROM bookings b
                 LEFT JOIN customers c ON b.customer_id = c.id 
-                LEFT JOIN payments p ON b.id = p.booking_id 
+                LEFT JOIN (
+                    SELECT 
+                        booking_id, 
+                        MAX(id) as payment_id, 
+                        MAX(verified) as verified, 
+                        MAX(payment_method) as payment_method
+                    FROM payments 
+                    GROUP BY booking_id
+                ) p_agg ON b.id = p_agg.booking_id
                 WHERE b.payment_status != 'paid' 
                 AND b.status != 'cancelled'
-                GROUP BY b.id 
                 ORDER BY b.created_at DESC 
                 LIMIT :limit";
                 
@@ -596,5 +616,25 @@ class BookingModel extends Model
         $stmt->execute();
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function autoCleanupExpiredBookings()
+    {
+        $today = date('Y-m-d');
+
+        // 1. Mark 'pending' bookings that never paid as 'expired'
+        $sqlExpired = "UPDATE bookings 
+                    SET status = 'expired' 
+                    WHERE status = 'pending' 
+                    AND check_in < ?";
+        $this->db->prepare($sqlExpired)->execute([$today]);
+
+        // 2. Mark 'confirmed' bookings as 'paid' ONLY IF
+        $sqlCompletePayment = "UPDATE bookings 
+                            SET payment_status = 'paid' 
+                            WHERE status = 'confirmed' 
+                            AND payment_status = 'partial' 
+                            AND check_out < ?";
+        $this->db->prepare($sqlCompletePayment)->execute([$today]);
     }
 }

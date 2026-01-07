@@ -119,4 +119,14 @@ class PaymentModel extends Model
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getPendingRevenue()
+    {
+        $sql = "SELECT SUM(amount) as total FROM payments WHERE verified = 'pending'";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $row['total'] ?: 0;
+    }
 }

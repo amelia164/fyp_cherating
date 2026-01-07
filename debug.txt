@@ -5,3 +5,148 @@ confirmBooking reached
 Checking room booking: room_id = 1, quantity = '1'
 ✅ Inserted room booking: room_id = 1, quantity = 1
 Booking created with ID: 3
+confirmBooking reached
+confirmBooking reached
+Checking room booking: room_id = 1, quantity = '1'
+✅ Inserted room booking: room_id = 1, quantity = 1
+Booking created with ID: 4
+confirmBooking reached
+Checking room booking: room_id = 3, quantity = '1'
+✅ Inserted room booking: room_id = 3, quantity = 1
+Booking created with ID: 5
+confirmBooking reached
+Checking room booking: room_id = 2, quantity = '1'
+✅ Inserted room booking: room_id = 2, quantity = 1
+Booking created with ID: 1
+confirmBooking reached
+Checking room booking: room_id = 1, quantity = '1'
+✅ Inserted room booking: room_id = 1, quantity = 1
+Booking created with ID: 2
+confirmBooking reached
+Checking room booking: room_id = 2, quantity = '5'
+✅ Inserted room booking: room_id = 2, quantity = 5
+Booking created with ID: 3
+confirmBooking reached
+Checking room booking: room_id = 1, quantity = '1'
+✅ Inserted room booking: room_id = 1, quantity = 1
+Booking created with ID: 4
+confirmBooking reached
+confirmBooking reached
+Checking room booking: room_id = 4, quantity = '1'
+✅ Inserted room booking: room_id = 4, quantity = 1
+Booking created with ID: 5
+confirmBooking reached
+Checking room booking: room_id = 2, quantity = '1'
+✅ Inserted room booking: room_id = 2, quantity = 1
+Booking created with ID: 6
+confirmBooking reached
+confirmBooking reached
+Checking room booking: room_id = 1, quantity = '1'
+✅ Inserted room booking: room_id = 1, quantity = 1
+Booking created with ID: 7
+confirmBooking reached
+Checking room booking: room_id = 1, quantity = '1'
+✅ Inserted room booking: room_id = 1, quantity = 1
+Booking created with ID: 8
+confirmBooking reached
+Checking room booking: room_id = 2, quantity = '1'
+✅ Inserted room booking: room_id = 2, quantity = 1
+Booking created with ID: 9
+confirmBooking reached
+Checking room booking: room_id = 2, quantity = '1'
+✅ Inserted room booking: room_id = 2, quantity = 1
+Booking created with ID: 10
+confirmBooking reached
+Checking room booking: room_id = 2, quantity = '1'
+✅ Inserted room booking: room_id = 2, quantity = 1
+Booking created with ID: 11
+confirmBooking reached
+Checking room booking: room_id = 4, quantity = '1'
+✅ Inserted room booking: room_id = 4, quantity = 1
+Booking created with ID: 12
+confirmBooking reached
+confirmBooking reached
+Checking room booking: room_id = 2, quantity = '1'
+✅ Inserted room booking: room_id = 2, quantity = 1
+Booking created with ID: 13
+confirmBooking reached
+Checking room booking: room_id = 2, quantity = '1'
+✅ Inserted room booking: room_id = 2, quantity = 1
+Booking created with ID: 14
+confirmBooking reached
+Checking room booking: room_id = 4, quantity = '1'
+✅ Inserted room booking: room_id = 4, quantity = 1
+Booking created with ID: 15
+confirmBooking reached
+Checking room booking: room_id = 4, quantity = '1'
+✅ Inserted room booking: room_id = 4, quantity = 1
+Booking created with ID: 16
+confirmBooking reached
+Checking room booking: room_id = 4, quantity = '1'
+✅ Inserted room booking: room_id = 4, quantity = 1
+Booking created with ID: 17
+confirmBooking reached
+Checking room booking: room_id = 4, quantity = '1'
+✅ Inserted room booking: room_id = 4, quantity = 1
+Booking created with ID: 18
+confirmBooking reached
+Checking room booking: room_id = 4, quantity = '1'
+✅ Inserted room booking: room_id = 4, quantity = 1
+Booking created with ID: 19
+confirmBooking reached
+confirmBooking reached
+Checking room booking: room_id = 2, quantity = '1'
+✅ Inserted room booking: room_id = 2, quantity = 1
+Booking created with ID: 20
+confirmBooking reached
+Checking room booking: room_id = 4, quantity = '1'
+✅ Inserted room booking: room_id = 4, quantity = 1
+Booking created with ID: 21
+confirmBooking reached
+confirmBooking reached
+Checking room booking: room_id = 1, quantity = '1'
+✅ Inserted room booking: room_id = 1, quantity = 1
+Booking created with ID: 22
+confirmBooking reached
+Checking room booking: room_id = 4, quantity = '1'
+✅ Inserted room booking: room_id = 4, quantity = 1
+Booking created with ID: 23
+confirmBooking reached
+Checking room booking: room_id = 3, quantity = '1'
+✅ Inserted room booking: room_id = 3, quantity = 1
+Booking created with ID: 24
+confirmBooking reached
+confirmBooking reached
+Checking room booking: room_id = 2, quantity = '1'
+✅ Inserted room booking: room_id = 2, quantity = 1
+Booking created with ID: 25
+confirmBooking reached
+Checking room booking: room_id = 2, quantity = '1'
+✅ Inserted room booking: room_id = 2, quantity = 1
+Booking created with ID: 26
+confirmBooking reached
+confirmBooking reached
+Checking room booking: room_id = 2, quantity = '1'
+✅ Inserted room booking: room_id = 2, quantity = 1
+Booking created with ID: 1
+confirmBooking reached
+Checking room booking: room_id = 3, quantity = '1'
+✅ Inserted room booking: room_id = 3, quantity = 1
+Booking created with ID: 2
+confirmBooking reached
+Checking room booking: room_id = 1, quantity = '1'
+✅ Inserted room booking: room_id = 1, quantity = 1
+Booking created with ID: 3
+confirmBooking reached
+Checking room booking: room_id = 4, quantity = '1'
+✅ Inserted room booking: room_id = 4, quantity = 1
+Booking created with ID: 4
+confirmBooking reached
+confirmBooking reached
+Checking room booking: room_id = 4, quantity = '1'
+✅ Inserted room booking: room_id = 4, quantity = 1
+Booking created with ID: 5
+confirmBooking reached
+Checking room booking: room_id = 1, quantity = '1'
+✅ Inserted room booking: room_id = 1, quantity = 1
+Booking created with ID: 6

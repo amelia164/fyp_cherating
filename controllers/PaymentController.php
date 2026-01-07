@@ -75,9 +75,7 @@ class PaymentController extends Controller
 
             $dbStatus = ($formStatus === 'verified') ? 'approved' : 'rejected';
 
-            $success = $this->paymentModel->updateVerificationStatus($id, $dbStatus, $reason);
-
-            if ($success) {
+            if ($this->paymentModel->updateVerificationStatus($id, $dbStatus, $reason)) {
                 $payment = $this->paymentModel->getPaymentById($id);
                 
                 if ($dbStatus === 'approved') {

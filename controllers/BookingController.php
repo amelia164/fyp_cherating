@@ -59,7 +59,6 @@ class BookingController extends Controller
     // Delete bookings
     public function delete($id)
     {
-        // check if the booking exists
         $booking = $this->bookingModel->getBookingById($id);
 
         if (!$booking) {
@@ -82,9 +81,7 @@ class BookingController extends Controller
     public function customerDashboard()
     {
         // 1. Authentication Check & Customer ID Retrieval
-        // Assuming you use sessions for login and store the customer ID.
         if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'customer') {
-            // Redirect if not logged in or not a customer
             header('Location: ' . APP_URL . '/login');
             exit;
         }
@@ -101,7 +98,6 @@ class BookingController extends Controller
 
         if (!empty($bookings)) {
             foreach ($bookings as $booking) {
-                // Check-out date is used to determine if the trip is still ongoing or upcoming.
                 if ($booking['check_out'] >= $currentDate) {
                     $upcomingBookings[] = $booking;
                 } else {
@@ -120,7 +116,8 @@ class BookingController extends Controller
     }
 
     // Cancel Booking
-    public function cancelBooking($id) {
+    public function cancelBooking($id)
+    {
         if (session_status() === PHP_SESSION_NONE) session_start();
         
         $bookingModel = $this->model('BookingModel');
@@ -132,7 +129,6 @@ class BookingController extends Controller
             exit;
         }
 
-        // Perform the cancellation in the database
         $result = $bookingModel->updateBookingStatus($id, 'unpaid', 'cancelled');
 
         if ($result) {

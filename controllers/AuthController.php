@@ -4,7 +4,7 @@ require_once 'helpers/WhatsAppHelper.php';
 class AuthController extends Controller
 {
     // Declare the model property
-    private $bookingModel, $contactModel, $roomModel, $customerModel, $adminModel;
+    private $bookingModel, $contactModel, $roomModel, $customerModel, $adminModel, $paymentModel;
 
     // Constructor to initialize the model
     public function __construct()
@@ -15,6 +15,7 @@ class AuthController extends Controller
         $this->roomModel = $this->model('RoomModel');
         $this->customerModel = $this->model('CustomerModel');
         $this->adminModel = $this->model('AdminModel');
+        $this->paymentModel = $this->model('PaymentModel');
     }
 
     public function login()
@@ -219,14 +220,16 @@ class AuthController extends Controller
 
         // Handle Admin Dashboard
         if ($type === 'admin') {
+            $this->bookingModel->autoCleanupExpiredBookings();
             $selectedYear = $_GET['year'] ?? date('Y');
             $data['selectedYear'] = $selectedYear;
             $data['availableYears'] = $this->bookingModel->getBookingYears();
 
             // Summary Cards
             $data['totalBookings'] = $this->bookingModel->getTotalBookings();
-            $data['totalRooms'] = $this->roomModel->getTotalRooms(); // Total types
+            $data['totalRooms'] = $this->roomModel->getTotalRooms();
             $data['totalRevenue'] = $this->bookingModel->getTotalRevenue();
+            $data['pendingRevenue'] = $this->paymentModel->getPendingRevenue();
             $data['totalMessages'] = $this->contactModel->getTotalMessages();
             
             // Physical capacity for occupancy percentage
